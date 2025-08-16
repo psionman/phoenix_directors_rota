@@ -2,14 +2,15 @@
 
 import datetime
 from pathlib import Path
-from dateutil.relativedelta import relativedelta  # type: ignore
-from workbooky import Workbook, Worksheet
 import asyncio
 from typing import NamedTuple
+from dateutil.relativedelta import relativedelta
+
+from workbooky import Workbook, Worksheet
+from psiutils.utilities import logger
 
 from directors_rota.config import read_config
-
-import directors_rota.text as text
+import directors_rota.text as txt
 
 status = {
     'OK': 0,
@@ -51,52 +52,54 @@ class Director():
         return self.name.split(' ')[0]
 
 
-def generate_rota(month: datetime) -> None:
+def generate_rota(month: datetime) -> tuple | None:
+    """Return the rota adn directors as a tuple."""
+    # pylint: disable=no-member)
     config = read_config()
     path = Path(config.workbook_dir, config.workbook_file_name)
     workbook = _get_workbook(path)
     if workbook == status['FILE_MISSING']:
-        return (status['FILE_MISSING'],)
+        logger.error(f'Workbook not found at {path}')
+        return
 
     main_sheet = asyncio.run(_get_sheet(workbook, config.main_sheet))
     if main_sheet == status['SHEET_MISSING']:
-        return (status['SHEET_MISSING'], config.main_sheet)
+        logger.error(f"Sheet '{config.main_sheet}' missing in Workbook")
+        return
 
     directors_sheet = asyncio.run(_get_sheet(workbook,
                                              config.directors_sheet))
     if directors_sheet == status['SHEET_MISSING']:
-        return (status['SHEET_MISSING'], config.directors_sheet)
+        logger.error(f"Sheet '{config.directors_sheet}' missing in Workbook")
+        return
 
     directors = get_directors(config, directors_sheet)
-    (start_date, end_date) = _date_limits(month)
-    return (
-        status['OK'],
-        _get_rota(start_date, end_date, config, main_sheet, directors),
-        directors)
+    rota_email = _get_rota(month, config, main_sheet, directors)
+    return (rota_email, directors)
 
 
 def _get_workbook(path):
     """Return the workbook from the path."""
     try:
-        workbook = Workbook(path)
-        return workbook
+        return Workbook(path)
     except FileNotFoundError:
         return status['FILE_MISSING']
 
 
 async def _get_sheet(workbook, sheet_name):
     """Return a sheet from the workbook."""
+
     try:
-        sheet = await workbook.get_worksheet(sheet_name)
-        return sheet
+        return await workbook.get_worksheet(sheet_name)
     except KeyError:
-        return status['SHEET_MISSING']
+        logger.error(f"Sheet '{sheet_name}' missing in Workbook")
     except Exception as err:
-        print(f'{sheet_name, err}')
+        logger.error(f"Unexpected error: sheet '{sheet_name}' {err}")
+    return
 
 
 def get_directors(config, worksheet: object) -> dict[str, Director]:
-    # Return a dict of Director objects keyed on initials
+    """Return a dict of Director objects keyed on initials."""
     directors = {}
     for row in worksheet.iter_rows(values_only=True):
         if row[0] and row[0] != 'Initials':
@@ -121,12 +124,12 @@ def _date_limits(month: datetime) -> tuple[datetime.datetime,
     return (start_date, end_date)
 
 
-def _get_rota(start_date: datetime,
-              end_date: datetime,
+def _get_rota(month: datetime,
               config: dict,
               main_sheet: object,
               directors: dict[str, Director]) -> list[str]:
     """Print the rota."""
+    (start_date, end_date) = _date_limits(month)
     mon_rota = _get_rota_dates(config.mon_date_col, start_date, end_date,
                                main_sheet, directors)
     wed_rota = _get_rota_dates(config.wed_date_col, start_date, end_date,
@@ -135,60 +138,61 @@ def _get_rota(start_date: datetime,
     return _create_rota_email(config, start_date, rota)
 
 
-def _get_rota_dates(date_col: int,
-                    start_date: datetime,
-                    end_date: datetime,
-                    worksheet: Worksheet,
-                    directors: dict[str, Director]) -> list[str]:
+def _get_rota_dates(
+        date_col: int,
+        start_date: datetime,
+        end_date: datetime,
+        worksheet: Worksheet,
+        directors: dict[str, Director]) -> list[str]:
     """Return a list of dates and directors names."""
     rota = []
     dir_col = date_col + 1
     for row in worksheet.iter_rows(values_only=True):
         rota_date = row[date_col]
-        if isinstance(rota_date, datetime.date):
-            if start_date <= rota_date < end_date:
-                err_date = f'{rota_date:%d %b %Y}'
-                dir_inits = row[dir_col]
-                if not dir_inits:
-                    print(f'{text.NO_DIRECTOR} {err_date}')
-                    continue
-                if dir_inits not in directors:
-                    print(f'{text.NO_DIRECTOR_NAME} {dir_inits} on {err_date}')
-                    continue
-                director = directors[dir_inits]
-                rota.append(f'{rota_date:%d/%m/%y}, {director.name}')
+        if (
+            rota_date
+            and isinstance(rota_date, datetime.date)
+            and start_date <= rota_date < end_date
+        ):
+            dir_inits = row[dir_col]
+            if not dir_inits:
+                logger.warning(f'{txt.NO_DIRECTOR} for {rota_date:%d %b %Y}')
+                continue
+            if dir_inits not in directors:
+                logger.warning(
+                    (f"{txt.INVALID_DIRECTOR} '{dir_inits}' "
+                     f"for {rota_date:%d %b %Y}"))
+                continue
+            director = directors[dir_inits]
+            rota.append(f'{rota_date:%d/%m/%y}, {director.name}')
     return rota
 
 
 def _generate_rota_list(mon_rota: list[str], wed_rota: list[str]) -> list[str]:
     # Return the rota as a list of strings
-    rota = []
-    rota.append('Mondays')
+    rota = ['Mondays']
     if not mon_rota:
-        rota.append(text.NO_DATES)
+        rota.append(txt.NO_DATES)
     else:
-        for item in mon_rota:
-            rota.append(item)
-    rota.append('')
-    rota.append('Wednesdays')
+        rota.extend(iter(mon_rota))
+    rota.extend(('', 'Wednesdays'))
     if not wed_rota:
-        rota.append(text.NO_DATES)
+        rota.append(txt.NO_DATES)
     else:
-        for item in wed_rota:
-            rota.append(item)
+        rota.extend(iter(wed_rota))
     return rota
 
 
-def _create_rota_email(config: dict,
-                       start_date: datetime, rota: list[str]) -> None:
-    # Print out the rota email text
+def _create_rota_email(
+        config: dict, start_date: datetime, rota: list[str]) -> str | None:
+    """Return the rota email text."""
     template_path = config.email_template
     try:
-        with open(template_path, 'r') as f_email:
+        with open(template_path, 'r', encoding='utf-8') as f_email:
             email_text = f_email.read()
     except FileNotFoundError:
-        print(f"{text.NO_TEMPLATE} {template_path}")
-        quit()
+        logger.error(f"{txt.NO_TEMPLATE} {template_path}")
+        return None
 
     email_text = email_text.replace('<month>', f'{start_date:%b %Y}')
     email_text = email_text.replace('<rota>', '\n'.join(rota))

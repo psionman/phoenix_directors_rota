@@ -1,0 +1,31 @@
+{"changes": {}, "event": "Config saved", "timestamp": "2025-08-15T09:24:26.759485Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {}, "event": "Config saved", "timestamp": "2025-08-15T09:25:04.315467Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"mon_date_col": [0, 1]}, "event": "Config saved", "timestamp": "2025-08-15T09:30:39.699005Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"mon_date_col": "old value=1, new_value=2"}, "event": "Config saved", "timestamp": "2025-08-15T09:34:23.825451Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"main_sheet": "old value=Main, new_value=MainA", "directors_sheet": "old value=Directors, new_value=DirectorsA"}, "event": "Config saved", "timestamp": "2025-08-15T09:34:46.042302Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"main_sheet": "(old value=MainA, new_value=Main)", "directors_sheet": "(old value=DirectorsA, new_value=Directors)", "mon_date_col": "(old value=2, new_value=1)"}, "event": "Config saved", "timestamp": "2025-08-15T09:35:51.862234Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"main_sheet": "(old value=Main, new_value=MainA)"}, "event": "Config saved", "timestamp": "2025-08-15T09:42:15.941679Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"main_sheet": "(old value=MainA, new_value=Main)"}, "event": "Config saved", "timestamp": "2025-08-15T09:49:01.349111Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"directors_sheet": "(old value=Directors, new_value=Directorsdfg)"}, "event": "Config saved", "timestamp": "2025-08-15T09:50:04.455650Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"directors_sheet": "(old value=Directorsdfg, new_value=Directors )", "send_emails": "(old value=True, new_value=False)"}, "event": "Config saved", "timestamp": "2025-08-15T09:50:26.302449Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"send_emails": "(old value=False, new_value=True)"}, "event": "Config saved", "timestamp": "2025-08-15T09:50:48.958892Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"send_emails": "(old value=True, new_value=False)"}, "event": "Config saved", "timestamp": "2025-08-15T10:40:08.661819Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"send_emails": "(old value=False, new_value=True)"}, "event": "Config saved", "timestamp": "2025-08-15T10:40:17.022099Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"send_emails": "(old value=True, new_value=False)"}, "event": "Config saved", "timestamp": "2025-08-15T15:47:01.202231Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"send_emails": "(old value=False, new_value=True)"}, "event": "Config saved", "timestamp": "2025-08-15T15:47:14.736122Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"send_emails": "(old value=True, new_value=False)"}, "event": "Config saved", "timestamp": "2025-08-15T16:06:34.003118Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"send_emails": "(old value=False, new_value=True)"}, "event": "Config saved", "timestamp": "2025-08-15T16:06:42.866201Z", "level": "info", "logger": "forms.frm_config"}
+{"changes": {"directors_sheet": "(old value=Directors , new_value=Directors)"}, "event": "Config saved", "timestamp": "2025-08-16T11:30:52.099388Z", "level": "info", "logger": "forms.frm_config"}
+{"event": "Workbook not found at /home/jeff/Downloads/directors-rota.xlsx/r", "timestamp": "2025-08-16T11:57:15.415298Z", "level": "error", "logger": "directors_rota.process"}
+{"event": "Workbook not found at /home/jeff/Downloads/directors-rota.xlsx/r", "timestamp": "2025-08-16T11:57:24.900062Z", "level": "error", "logger": "directors_rota.process"}
+{"event": "Workbook not found at /home/jeff/Downloads/directors-rota.xlsx/r", "timestamp": "2025-08-16T11:58:49.370361Z", "level": "error", "logger": "directors_rota.process"}
+{"event": "Workbook not found at /home/jeff/Downloads/directors-rota.xlsx/r", "timestamp": "2025-08-16T11:59:18.250498Z", "level": "error", "logger": "directors_rota.process"}
+{"event": "Sheet Main missing in Workbook", "timestamp": "2025-08-16T12:01:59.535080Z", "level": "error", "logger": "directors_rota.process"}
+{"event": "Sheet Main missing in Workbook", "timestamp": "2025-08-16T12:03:21.032991Z", "level": "error", "logger": "directors_rota.process"}
+{"event": "Sheet 'Main' missing in Workbook", "timestamp": "2025-08-16T14:03:55.217372Z", "level": "error", "logger": "directors_rota.process"}
+{"event": "Sheet 'Directors' missing in Workbook", "timestamp": "2025-08-16T14:04:56.941140Z", "level": "error", "logger": "directors_rota.process"}
+{"changes": {"mon_date_col": "(old value=1, new_value=0)"}, "event": "Config saved", "timestamp": "2025-08-16T14:15:49.504585Z", "level": "info", "logger": "forms.frm_config"}
+{"event": "No director defined for for 11 Aug 2025", "timestamp": "2025-08-16T14:25:01.013178Z", "level": "warning", "logger": "directors_rota.process"}
+{"event": "No director name defined for for 11 Aug 2025", "timestamp": "2025-08-16T14:25:34.064701Z", "level": "warning", "logger": "directors_rota.process"}
+{"event": "Invalid director name defined for for 11 Aug 2025", "timestamp": "2025-08-16T14:26:29.826760Z", "level": "warning", "logger": "directors_rota.process"}
+{"event": "Invalid director name defined for 'Jws' for 11 Aug 2025", "timestamp": "2025-08-16T14:28:26.311782Z", "level": "warning", "logger": "directors_rota.process"}

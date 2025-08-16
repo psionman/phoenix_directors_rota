@@ -7,27 +7,27 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from dateutil.parser import parse as date_parse
 
-from psiutils.widgets import clickable_widget
 from psiutils.buttons import ButtonFrame, IconButton
 from psiutils.constants import PAD, LARGE_FONT
 from psiutils.utilities import window_resize, geometry
 import psiutils.text as psiText
 
-from constants import MMYYYY, DOWNLOADS_DIR, XLS_FILE_TYPES
-from config import config
-from process import generate_rota, status as process_status
-import text
+from directors_rota.constants import MMYYYY, DOWNLOADS_DIR, XLS_FILE_TYPES
+from directors_rota.config import config
+from directors_rota.process import generate_rota, status as process_status
+import directors_rota.text as txt
 
-from config import read_config
+from directors_rota.config import read_config
 
-from forms.frm_email import EmailFrame
-from main_menu import MainMenu
+from directors_rota.forms.frm_email import EmailFrame
+from directors_rota.main_menu import MainMenu
 
-FRAME_TITLE = f'{text.DIRECTORS} Rota'
+FRAME_TITLE = f'{txt.DIRECTORS} Rota'
 
 
 class MainFrame():
     def __init__(self, root: tk.Tk) -> None:
+        # pylint: disable=no-member)
         self.root = root
         self.directors = []
         self.email = ''
@@ -39,20 +39,20 @@ class MainFrame():
         self.email_template = tk.StringVar(value=config.email_template)
         self.rota_month = tk.StringVar(value='')
 
-        self.show()
+        self._show()
 
         self.period_starts = self._get_period_starts()
         self.selected_month = datetime.datetime(1, 1, 1)
         self._set_file_message()
 
-    def show(self) -> None:
+    def _show(self) -> None:
         root = self.root
         root.geometry(geometry(self.config, __file__))
         root.title(FRAME_TITLE)
 
         root.rowconfigure(0, weight=1)
         root.columnconfigure(0, weight=1)
-        root.bind('<Control-q>', self.dismiss)
+        root.bind('<Control-q>', self._dismiss)
         root.bind('<Control-g>', self._generate_rota)
         root.bind('<Configure>',
                   lambda event, arg=None: window_resize(self, __file__))
@@ -119,11 +119,10 @@ class MainFrame():
 
     def _button_frame(self, master: tk.Frame) -> tk.Frame:
         frame = ButtonFrame(master, tk.HORIZONTAL)
-        buttons = [
+        frame.buttons = [
             frame.icon_button('build', True, self._generate_rota),
-            frame.icon_button('close', False, self.dismiss)
+            frame.icon_button('close', False, self._dismiss)
         ]
-        frame.buttons = buttons
         return frame
 
     def _get_period_starts(self) -> None:
@@ -157,18 +156,13 @@ class MainFrame():
             return
 
         selected_month = date_parse(f'1 {self.rota_month.get()}').date()
-        (status, self.email, self.directors) = generate_rota(selected_month)
-
-        if status == process_status['OK']:
-            dlg = EmailFrame(self)
-            self.root.wait_window(dlg.root)
-
-        elif status == process_status['FILE_MISSING']:
-            message = f'Workbook "{config.workbook_file_name}" does not exist'
-            messagebox.showerror(title=FRAME_TITLE, message=message)
-        elif status == process_status['SHEET_MISSING']:
-            message = f'Sheet "{0}?????" does not exist'
-            messagebox.showerror(title=FRAME_TITLE, message=message)
+        response = generate_rota(selected_month)
+        if not response:
+            messagebox.showerror('', 'Rota not created')
+            return
+        (self.email, self.directors) = response
+        dlg = EmailFrame(self)
+        self.root.wait_window(dlg.root)
         self.root.destroy()
 
     def _get_workbook_path(self) -> None:
@@ -191,19 +185,20 @@ class MainFrame():
         self._set_file_message()
 
     def _set_file_message(self) -> None:
+        # pylint: disable=no-member)
         message = ''
         config_text = 'Click on Menu > Defaults to define.'
         email_template = os.path.isfile(config.email_template)
         directors_rota = os.path.isfile(self.workbook_path.get())
         if not email_template and not directors_rota:
-            message = (f'{text.DIRECTORS} rota and email template not valid. '
+            message = (f'{txt.DIRECTORS} rota and email template not valid. '
                        f'{config_text}')
         elif not email_template and not directors_rota:
             message = f'Email template not valid. {config_text}'
         elif not email_template and not directors_rota:
-            message = f'{text.DIRECTORS} rota not valid.'
+            message = f'{txt.DIRECTORS} rota not valid.'
         if message:
             self.button_frame.enable(False)
 
-    def dismiss(self, *args) -> None:
+    def _dismiss(self, *args) -> None:
         self.root.destroy()

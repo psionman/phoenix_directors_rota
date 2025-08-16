@@ -8,19 +8,19 @@ import tkinter as tk
 from psiutils.widgets import get_styles
 from psiutils.utilities import display_icon
 
-from constants import ICON_FILE
+from directors_rota.constants import ICON_FILE
 
-from forms.frm_main import MainFrame
-from module_caller import ModuleCaller
+from directors_rota.forms.frm_main import MainFrame
+from directors_rota.module_caller import ModuleCaller
 
 
 class Root():
+    """Create the app's root and loop."""
     def __init__(self) -> None:
-        """Create the app's root and loop."""
         self.root = tk.Tk()
         root = self.root
         display_icon(root, ICON_FILE, ignore_error=True)
-        root.title('{APP_TITLE}')
+        # root.title(f'{APP_TITLE}')
         root.protocol("WM_DELETE_WINDOW", root.destroy)
 
         get_styles()

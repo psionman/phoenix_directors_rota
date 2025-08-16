@@ -6,68 +6,92 @@ from pathlib import Path
 from psiutils.widgets import clickable_widget, separator_frame
 from psiutils.buttons import ButtonFrame, IconButton
 from psiutils.constants import PAD
-from psiutils.utilities import window_resize, geometry
+from psiutils.utilities import window_resize, geometry, logger
 from psiutils import text as psiText
 
-from constants import COL_MAXIMUM, APP_TITLE, TXT_FILE_TYPES
-from config import read_config
+from directors_rota.constants import COL_MAXIMUM, APP_TITLE, TXT_FILE_TYPES
+from directors_rota.config import read_config
 
-import text
+import directors_rota.text as txt
 
 FRAME_TITLE = 'System defaults'
 
+FIELDS = {
+    "workbook_dir": tk.StringVar,
+    "main_sheet": tk.StringVar,
+    "directors_sheet": tk.StringVar,
+    "initials_col": tk.IntVar,
+    "name_col": tk.IntVar,
+    "email_col": tk.IntVar,
+    "username_col": tk.IntVar,
+    "active_col": tk.IntVar,
+    "mon_date_col": tk.IntVar,
+    "wed_date_col": tk.IntVar,
+    "email_subject": tk.StringVar,
+    "email_template": tk.StringVar,
+    "send_emails": tk.BooleanVar,
+}
+
 
 class ConfigFrame():
+    workbook_dir: tk.StringVar
+    main_sheet: tk.StringVar
+    directors_sheet: tk.StringVar
+    initials_col: tk.IntVar
+    name_col: tk.IntVar
+    email_col: tk.IntVar
+    username_col: tk.IntVar
+    active_col: tk.IntVar
+    mon_date_col: tk.IntVar
+    wed_date_col: tk.IntVar
+    email_subject: tk.StringVar
+    email_template: tk.StringVar
+    send_emails: tk.BooleanVar
+
     def __init__(self, parent) -> None:
+        # pylint: disable=no-member)
         self.root = tk.Toplevel(parent.root)
         self.parent = parent
-        self.config = read_config()
+        config = read_config()
+        self.config = config
 
-        # Tk vars
-        self.workbook_dir = tk.StringVar(value=self.config.workbook_dir)
-        self.main_sheet = tk.StringVar(value=self.config.main_sheet)
-        self.directors_sheet = tk.StringVar(value=self.config.directors_sheet)
+        for field, f_type in FIELDS.items():
+            if f_type is tk.StringVar:
+                setattr(self, field, self._stringvar(getattr(config, field)))
+            elif f_type is tk.IntVar:
+                setattr(self, field, self._intvar(getattr(config, field)))
+            elif f_type is tk.BooleanVar:
+                setattr(self, field, self._boolvar(getattr(config, field)))
 
-        self.initials_col = tk.IntVar(value=self.config.initials_col)
-        self.name_col = tk.IntVar(value=self.config.name_col)
-        self.email_col = tk.IntVar(value=self.config.email_col)
-        self.username_col = tk.IntVar(value=self.config.username_col)
-        self.active_col = tk.IntVar(value=self.config.active_col)
+        self.password_hide = ''
+        self.button_frame = None
+        self.password_button = None
+        self.password_entry = None
 
-        self.mon_date_col = tk.IntVar(value=self.config.mon_date_col)
-        self.wed_date_col = tk.IntVar(value=self.config.wed_date_col)
+        self._show()
 
-        self.email_subject = tk.StringVar(value=self.config.email_subject)
-        self.email_template = tk.StringVar(value=self.config.email_template)
-        self.send_emails = tk.BooleanVar(value=self.config.send_emails)
+    def _stringvar(self, value: str) -> tk.StringVar:
+        stringvar = tk.StringVar(value=value)
+        stringvar.trace_add('write', self._check_value_changed)
+        return stringvar
 
-        # Change check vars
-        self.workbook_dir.trace_add('write', self._check_value_changed)
-        self.main_sheet.trace_add('write', self._check_value_changed)
-        self.directors_sheet.trace_add('write', self._check_value_changed)
+    def _intvar(self, value: int) -> tk.IntVar:
+        intvar = tk.IntVar(value=value)
+        intvar.trace_add('write', self._check_value_changed)
+        return intvar
 
-        self.initials_col.trace_add('write', self._check_value_changed)
-        self.name_col.trace_add('write', self._check_value_changed)
-        self.email_col.trace_add('write', self._check_value_changed)
-        self.username_col.trace_add('write', self._check_value_changed)
-        self.active_col.trace_add('write', self._check_value_changed)
+    def _boolvar(self, value: bool) -> tk.BooleanVar:
+        boolvar = tk.BooleanVar(value=value)
+        boolvar.trace_add('write', self._check_value_changed)
+        return boolvar
 
-        self.mon_date_col.trace_add('write', self._check_value_changed)
-        self.wed_date_col.trace_add('write', self._check_value_changed)
-
-        self.email_subject.trace_add('write', self._check_value_changed)
-        self.email_template.trace_add('write', self._check_value_changed)
-        self.send_emails.trace_add('write', self._check_value_changed)
-
-        self.show()
-
-    def show(self) -> None:
+    def _show(self) -> None:
         root = self.root
         root.geometry(geometry(self.config, __file__))
         root.title(FRAME_TITLE)
         root.transient(self.parent.root)
 
-        root.bind('<Control-x>', self.dismiss)
+        root.bind('<Control-x>', self._dismiss)
         root.bind('<Control-s>', self._save_config)
         root.bind('<Configure>',
                   lambda event, arg=None: window_resize(self, __file__))
@@ -86,10 +110,6 @@ class ConfigFrame():
         frame.columnconfigure(2, weight=1)
 
         row = 0
-        # header = ttk.Label(frame, text=FRAME_TITLE, font=LARGE_FONT)
-        # header.grid(row=row, column=0, columnspan=4, pady=PAD)
-
-        row += 1
         heading_frame = separator_frame(frame, 'Workbook')
         heading_frame.grid(row=row, column=0, columnspan=4, sticky=tk.EW)
 
@@ -214,7 +234,7 @@ class ConfigFrame():
         frame = ButtonFrame(master, tk.HORIZONTAL)
         buttons = [
             frame.icon_button('save', True, self._save_config),
-            frame.icon_button('exit', False, self.dismiss),
+            frame.icon_button('exit', False, self._dismiss),
         ]
         frame.buttons = buttons
         frame.enable(False)
@@ -223,10 +243,10 @@ class ConfigFrame():
     def _show_password(self, *args):
         if self.password_hide:
             self.password_hide = ''
-            self.password_button.self.config(text=text.HIDE)
+            self.password_button.self.config(text=txt.HIDE)
         else:
             self.password_hide = '*'
-            self.password_button.self.config(text=text.SHOW)
+            self.password_button.self.config(text=txt.SHOW)
         self.password_entry.self.config(show=self.password_hide)
 
     def _get_email_template(self):
@@ -260,53 +280,32 @@ class ConfigFrame():
             message = f'Defaults not saved{lf}{result}'
             messagebox.showerror(title=APP_TITLE, message=message,
                                  parent=self.root)
-        self.dismiss()
-
-    def _value_changed(self) -> bool:
-        return (
-            self.workbook_dir.get() != self.config.workbook_dir or
-            self.main_sheet.get() != self.config.main_sheet or
-            self.directors_sheet.get() != self.config.directors_sheet or
-
-            self.initials_col.get() != self.config.initials_col or
-            self.name_col.get() != self.config.name_col or
-            self.email_col.get() != self.config.email_col or
-            self.username_col.get() != self.config.username_col or
-            self.active_col.get() != self.config.active_col or
-
-            self.mon_date_col.get() != self.config.mon_date_col or
-            self.wed_date_col.get() != self.config.wed_date_col or
-
-            self.email_template.get() != self.config.email_template or
-            self.email_subject.get() != self.config.email_subject or
-            self.send_emails.get() != self.config.send_emails)
+        self._dismiss()
 
     def _check_value_changed(self, *args):
-        enable = False
-        if self._value_changed():
-            enable = True
+        enable = bool(self._config_changes())
         self.button_frame.enable(enable)
 
     def _config_save(self):
-        self.config.config['workbook_dir'] = self.workbook_dir.get()
-        self.config.config['main_sheet'] = self.main_sheet.get()
-        self.config.config['directors_sheet'] = self.directors_sheet.get()
+        changes = {field: f'(old value={change[0]}, new_value={change[1]})'
+                   for field, change in self._config_changes().items()}
 
-        self.config.config['initials_col'] = self.initials_col.get()
-        self.config.config['name_col'] = self.name_col.get()
-        self.config.config['email_col'] = self.email_col.get()
-        self.config.config['username_col'] = self.username_col.get()
-        self.config.config['active_col'] = self.active_col.get()
+        logger.info(
+            "Config saved",
+            changes=changes
+        )
 
-        self.config.config['mon_date_col'] = self.mon_date_col.get()
-        self.config.config['wed_date_col'] = self.wed_date_col.get()
+        for field in FIELDS:
+            self.config.config[field] = getattr(self, field).get()
+        return self.config.save()
 
-        self.config.config['email_template'] = self.email_template.get()
-        self.config.config['email_subject'] = self.email_subject.get()
-        self.config.config['send_emails'] = self.send_emails.get()
+    def _config_changes(self) -> dict:
+        stored = self.config.config
+        return {
+            field: (stored[field], getattr(self, field).get())
+            for field in FIELDS
+            if stored[field] != getattr(self, field).get()
+        }
 
-        result = self.config.save()
-        return result
-
-    def dismiss(self, *args):
+    def _dismiss(self, *args):
         self.root.destroy()

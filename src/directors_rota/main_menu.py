@@ -40,7 +40,7 @@ class MainMenu():
             MenuItem(f'Defaults{text.ELLIPSIS}', self.show_defaults),
             MenuItem(f'Copy template{text.ELLIPSIS}',
                      self.copy_template),
-            MenuItem('Quit', self.dismiss),
+            MenuItem('Quit', self._dismiss),
         ]
 
     def _help_menu_items(self) -> list:
@@ -82,5 +82,5 @@ class MainMenu():
         about = f'Version: {__version__}\nAuthor: {AUTHOR}'
         messagebox.showinfo(title=f'{APP_TITLE} - About', message=about)
 
-    def dismiss(self):
+    def _dismiss(self):
         self.root.destroy()

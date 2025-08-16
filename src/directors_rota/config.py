@@ -17,9 +17,9 @@ email_key = os.getenv('EMAIL_KEY')
 email_sender = os.getenv('EMAIL_SENDER')
 smtp_server = os.getenv('SMTP_SERVER')
 try:
-    smtp_port = int(os.getenv('SMTP_PORT'))
+    SMTP_PORT = int(os.getenv('SMTP_PORT'))
 except TypeError:
-    smtp_port = 0
+    SMTP_PORT = 0
 
 DEFAULT_CONFIG = {
     'workbook_dir': Path(get_downloads_dir()),
@@ -37,41 +37,43 @@ DEFAULT_CONFIG = {
     'wed_date_col': 3,
     'senders_email_address': email_sender,
     'smtp_server': smtp_server,
-    'smtp_port': smtp_port,
+    'SMTP_PORT': SMTP_PORT,
     'email_password': email_key,
     'email_subject': f'Phoenix Bridge Club - BBO {text.DIRECTORS} rota',
     'send_emails': True,
     'geometry': {},
+    'new_geometry': {},
 }
 
 
 def read_config() -> TomlConfig:
     """Return the config file."""
-    config = TomlConfig(path=CONFIG_PATH, defaults=DEFAULT_CONFIG)
-    config.check_defaults(config.config)
-    return config
+    toml_config = TomlConfig(path=CONFIG_PATH, defaults=DEFAULT_CONFIG)
+    toml_config.check_defaults(toml_config.config)
+    return toml_config
 
 
-def save_config(config: TomlConfig) -> TomlConfig | None:
-    result = config.save()
-    if result != config.STATUS_OK:
+def save_config(changed_config: TomlConfig) -> TomlConfig | None:
+    """Save the config file."""
+    result = changed_config.save()
+    if result != changed_config.STATUS_OK:
         return None
-    config = TomlConfig(CONFIG_PATH)
-    return config
+    toml_config = TomlConfig(CONFIG_PATH)
+    return toml_config
 
 
 def _get_env() -> dict:
     load_dotenv()
     try:
-        smtp_port = int(os.getenv('SMTP_PORT'))
+        SMTP_PORT = int(os.getenv('SMTP_PORT'))
     except TypeError:
-        smtp_port = 0
+        SMTP_PORT = 0
 
     return {
         'email_key': os.getenv('EMAIL_KEY'),
         'email_sender': os.getenv('EMAIL_SENDER'),
         'smtp_server': os.getenv('SMTP_SERVER'),
-        'smtp_port': smtp_port
+        'SMTP_PORT': SMTP_PORT
     }
 
 

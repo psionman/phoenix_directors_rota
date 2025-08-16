@@ -33,7 +33,7 @@ class EmailFrame():
         root.geometry(geometry(self.config, __file__))
         root.title('Rota')
 
-        root.bind('<Control-x>', self.dismiss)
+        root.bind('<Control-x>', self._dismiss)
         root.bind('<Control-s>', self._send_emails)
         root.bind('<Configure>',
                   lambda event, arg=None: window_resize(self, __file__))
@@ -71,7 +71,7 @@ class EmailFrame():
         frame = ButtonFrame(master, tk.HORIZONTAL)
         buttons = [
             frame.icon_button('send', True, self._send_emails),
-            frame.icon_button('exit', False, self.dismiss),
+            frame.icon_button('exit', False, self._dismiss),
         ]
         frame.buttons = buttons
         return frame
@@ -85,10 +85,10 @@ class EmailFrame():
             if isinstance(response, int):
                 messagebox.showinfo(
                     'Emails', f'{response} emails sent.', parent=self.root)
-                self.dismiss()
+                self._dismiss()
                 return
             messagebox.showerror(
                 'Emails', 'Emails not sent.', parent=self.root)
 
-    def dismiss(self, event: object = None):
+    def _dismiss(self, event: object = None):
         self.root.destroy()
