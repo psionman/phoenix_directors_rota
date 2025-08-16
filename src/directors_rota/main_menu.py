@@ -6,14 +6,13 @@ import shutil
 from psiutils.utilities import create_directories
 from psiutils.menus import Menu, MenuItem
 
-from constants import (
+from directors_rota.constants import (
     APP_TITLE, DOWNLOADS_DIR, EMAIL_TEMPLATE, TXT_FILE_TYPES, AUTHOR)
-from _version import __version__
-import text
+from directors_rota._version import __version__
+import directors_rota.config as config
+import directors_rota.text as txt
 
-from config import config
-
-from forms.frm_config import ConfigFrame
+from directors_rota.forms.frm_config import ConfigFrame
 
 SPACES = ' '*20
 
@@ -37,21 +36,22 @@ class MainMenu():
 
     def _file_menu_items(self) -> list:
         return [
-            MenuItem(f'Defaults{text.ELLIPSIS}', self.show_defaults),
-            MenuItem(f'Copy template{text.ELLIPSIS}',
+            MenuItem(f'Defaults{txt.ELLIPSIS}', self.show_defaults),
+            MenuItem(f'Copy template{txt.ELLIPSIS}',
                      self.copy_template),
             MenuItem('Quit', self._dismiss),
         ]
 
     def _help_menu_items(self) -> list:
         return [
-            # MenuItem(f'On line help{text.ELLIPSIS}', self._show_help),
-            MenuItem(f'Data directory location{text.ELLIPSIS}',
+            # MenuItem(f'On line help{txt.ELLIPSIS}', self._show_help),
+            MenuItem(f'Data directory location{txt.ELLIPSIS}',
                      self._show_data_directory),
-            MenuItem(f'About{text.ELLIPSIS}', self.show_about),
+            MenuItem(f'About{txt.ELLIPSIS}', self.show_about),
         ]
 
     def copy_template(self) -> None:
+        # pylint: disable=no-member)
         template_path = filedialog.askopenfilename(
             title='Copy email template',
             initialdir=DOWNLOADS_DIR,
@@ -75,8 +75,10 @@ class MainMenu():
         self.root.wait_window(dlg.root)
 
     def _show_data_directory(self) -> None:
-        dir = f'Data directory: {Path(config.email_template).parent} {SPACES}'
-        messagebox.showinfo(title='Data directory', message=dir)
+        # pylint: disable=no-member)
+        data_dir = (f'Data directory: '
+                    f'{Path(config.email_template).parent} {SPACES}')
+        messagebox.showinfo(title='Data directory', message=data_dir)
 
     def show_about(self):
         about = f'Version: {__version__}\nAuthor: {AUTHOR}'
