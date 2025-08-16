@@ -4,10 +4,11 @@ import smtplib
 from email.mime.text import MIMEText
 from smtplib import SMTPAuthenticationError
 
+from psiutils.utilities import logger
 from psiutils.errors import ErrorMsg
 
-from process import Director
-from config import read_config, env
+from directors_rota.process import Director
+from directors_rota.config import read_config, env
 
 
 def send_emails(text: str, directors: dict[Director]) -> int | ErrorMsg:
@@ -15,8 +16,8 @@ def send_emails(text: str, directors: dict[Director]) -> int | ErrorMsg:
     emails_sent = 0
     for key, director in directors.items():
         if key and director. active:
-            print(director.email)
             response = _create_email(text, director)
+            logger.info(f"Email sent to {director.email}")
             if isinstance(response, ErrorMsg):
                 return response
             emails_sent += 1
@@ -24,6 +25,7 @@ def send_emails(text: str, directors: dict[Director]) -> int | ErrorMsg:
 
 
 def _create_email(text: str, director: Director) -> str:
+    # pylint: disable=no-member)
     config = read_config()
     try:
         _send_email(
@@ -31,11 +33,13 @@ def _create_email(text: str, director: Director) -> str:
             text,
             director.email)
     except SMTPAuthenticationError:
+        logger.error('Email authentication error.')
         return ErrorMsg(
             header='Email error',
             message='Email authentication error.',
         )
     except TypeError:
+        logger.error('Email setup error.')
         return ErrorMsg(
             header='Email error',
             message='Email setup error.',
@@ -48,7 +52,7 @@ def _send_email(subject, body, recipient):
     msg['Subject'] = subject
     msg['From'] = env['email_sender']
     msg['To'] = recipient
-    # recipient = sender
+    # recipient = 'jeffwatkins2000@gmail.com'
     with smtplib.SMTP_SSL(env['smtp_server'], env['smtp_port']) as smtp_server:
         smtp_server.login(env['email_sender'], env['email_key'])
         smtp_server.sendmail(env['email_sender'], recipient, msg.as_string())

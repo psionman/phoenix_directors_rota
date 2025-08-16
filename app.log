@@ -29,3 +29,11 @@
 {"event": "No director name defined for for 11 Aug 2025", "timestamp": "2025-08-16T14:25:34.064701Z", "level": "warning", "logger": "directors_rota.process"}
 {"event": "Invalid director name defined for for 11 Aug 2025", "timestamp": "2025-08-16T14:26:29.826760Z", "level": "warning", "logger": "directors_rota.process"}
 {"event": "Invalid director name defined for 'Jws' for 11 Aug 2025", "timestamp": "2025-08-16T14:28:26.311782Z", "level": "warning", "logger": "directors_rota.process"}
+{"event": "Email sent to b.pilbin@btinternet.com", "timestamp": "2025-08-16T14:49:50.787828Z", "level": "info", "logger": "emails"}
+{"event": "Email sent to alison.pitk124@ntlworld.com", "timestamp": "2025-08-16T14:49:51.819809Z", "level": "info", "logger": "emails"}
+{"event": "Email sent to iris.foweather@gmail.com", "timestamp": "2025-08-16T14:49:53.757880Z", "level": "info", "logger": "emails"}
+{"event": "Email sent to john.g.edwards@talktalk.net", "timestamp": "2025-08-16T14:49:54.884081Z", "level": "info", "logger": "emails"}
+{"event": "Email sent to john_radford@rocketmail.com", "timestamp": "2025-08-16T14:49:56.107598Z", "level": "info", "logger": "emails"}
+{"event": "Email sent to jeffwatkins2000@gmail.com", "timestamp": "2025-08-16T14:49:57.263505Z", "level": "info", "logger": "emails"}
+{"event": "Email sent to lynne.marlow@ntlworld.com", "timestamp": "2025-08-16T14:49:58.571571Z", "level": "info", "logger": "emails"}
+{"event": "Email sent to ross@rattys.co.uk", "timestamp": "2025-08-16T14:49:59.700278Z", "level": "info", "logger": "emails"}

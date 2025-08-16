@@ -73,7 +73,7 @@ def _get_env() -> dict:
         'email_key': os.getenv('EMAIL_KEY'),
         'email_sender': os.getenv('EMAIL_SENDER'),
         'smtp_server': os.getenv('SMTP_SERVER'),
-        'SMTP_PORT': SMTP_PORT
+        'smtp_port': SMTP_PORT
     }
 
 
