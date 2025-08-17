@@ -52,7 +52,7 @@ def _send_email(subject, body, recipient):
     msg['Subject'] = subject
     msg['From'] = env['email_sender']
     msg['To'] = recipient
-    # recipient = 'jeffwatkins2000@gmail.com'
+    # recipient = env['email_sender']
     with smtplib.SMTP_SSL(env['smtp_server'], env['smtp_port']) as smtp_server:
         smtp_server.login(env['email_sender'], env['email_key'])
         smtp_server.sendmail(env['email_sender'], recipient, msg.as_string())
