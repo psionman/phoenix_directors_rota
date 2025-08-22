@@ -1,8 +1,9 @@
 """Module caller for Phoenix Director's Rota."""
-from forms.frm_config import ConfigFrame
+from directors_rota.forms.frm_config import ConfigFrame
 
 
 class ModuleCaller():
+    """Call specific module directly from the command line."""
     def __init__(self, root, module) -> None:
         modules = {
             'config': self._config,

@@ -165,6 +165,8 @@ def _get_rota_dates(
                 continue
             director = directors[dir_inits]
             rota.append(f'{rota_date:%d/%m/%y}, {director.name}')
+            logger.info(
+                f"Rota data added for {rota_date:%d %b %Y}, {director.name}")
     return rota
 
 
