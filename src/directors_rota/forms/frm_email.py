@@ -2,16 +2,14 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import clipboard
-from pathlib import Path
 
-from psiutils.buttons import ButtonFrame, IconButton
+from psiutils.buttons import ButtonFrame
 from psiutils.widgets import WaitCursor
 from psiutils.constants import PAD
 from psiutils.utilities import window_resize, geometry
 
-from config import read_config
-from emails import send_emails
-import text
+from directors_rota.config import read_config
+from directors_rota.emails import send_emails
 
 
 class EmailFrame():

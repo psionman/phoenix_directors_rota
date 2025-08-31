@@ -123,7 +123,7 @@ class ConfigFrame():
                           padx=PAD, pady=PAD)
 
         button = IconButton(
-            frame, psiText.OPEN, 'open', self._get_workbook_dir)
+            frame, psiText.OPEN, 'open', False, self._get_workbook_dir)
         button.grid(row=row, column=3, sticky=tk.W, padx=PAD)
 
         row += 1
@@ -137,7 +137,7 @@ class ConfigFrame():
                             padx=PAD, pady=PAD)
 
         button = IconButton(
-            frame, psiText.OPEN, 'open', self._get_email_template)
+            frame, psiText.OPEN, 'open', False, self._get_email_template)
         button.grid(row=row, column=3, sticky=tk.W, padx=PAD)
 
         # Main sheet name
