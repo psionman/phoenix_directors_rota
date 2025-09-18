@@ -14,14 +14,17 @@ import psiutils.text as psiText
 
 from directors_rota.constants import MMYYYY, DOWNLOADS_DIR, XLS_FILE_TYPES
 from directors_rota.config import config
-from directors_rota.process import generate_rota, status as process_status
-import directors_rota.text as txt
+# from directors_rota.process import generate_rota, status as process_status
+from directors_rota.text import Text
 
 from directors_rota.config import read_config
 
 from directors_rota.forms.frm_email import EmailFrame
 from directors_rota.main_menu import MainMenu
 
+txt = Text()
+
+# pylint: disable=no-member)
 FRAME_TITLE = f'{txt.DIRECTORS} Rota'
 
 

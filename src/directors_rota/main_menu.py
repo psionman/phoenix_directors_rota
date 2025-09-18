@@ -10,9 +10,11 @@ from directors_rota.constants import (
     APP_TITLE, DOWNLOADS_DIR, EMAIL_TEMPLATE, TXT_FILE_TYPES, AUTHOR)
 from directors_rota._version import __version__
 import directors_rota.config as config
-import directors_rota.text as txt
+from directors_rota.text import Text
 
 from directors_rota.forms.frm_config import ConfigFrame
+
+txt = Text(1)
 
 SPACES = ' '*20
 
@@ -35,6 +37,7 @@ class MainMenu():
         menubar.add_cascade(menu=help_menu, label='Help')
 
     def _file_menu_items(self) -> list:
+        # pylint: disable=no-member)
         return [
             MenuItem(f'Defaults{txt.ELLIPSIS}', self.show_defaults),
             MenuItem(f'Copy template{txt.ELLIPSIS}',
@@ -43,6 +46,7 @@ class MainMenu():
         ]
 
     def _help_menu_items(self) -> list:
+        # pylint: disable=no-member)
         return [
             # MenuItem(f'On line help{txt.ELLIPSIS}', self._show_help),
             MenuItem(f'Data directory location{txt.ELLIPSIS}',

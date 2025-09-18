@@ -1,15 +1,17 @@
 """Config for Phoenix director's rota."""
 import os
-from psiconfig import TomlConfig
 from pathlib import Path
 from appdirs import user_data_dir
 from dotenv import load_dotenv
 
+from psiconfig import TomlConfig
 from psiutils.known_paths import get_downloads_dir
 
-from directors_rota.constants import CONFIG_PATH, APP_NAME, APP_AUTHOR, EMAIL_TEMPLATE
+from directors_rota.constants import (
+    CONFIG_PATH, APP_NAME, APP_AUTHOR, EMAIL_TEMPLATE)
+from directors_rota.text import Text
 
-import directors_rota.text as text
+txt = Text()
 
 load_dotenv()
 
@@ -39,7 +41,7 @@ DEFAULT_CONFIG = {
     'smtp_server': smtp_server,
     'SMTP_PORT': SMTP_PORT,
     'email_password': email_key,
-    'email_subject': f'Phoenix Bridge Club - BBO {text.DIRECTORS} rota',
+    'email_subject': f'Phoenix Bridge Club - BBO {txt.DIRECTORS} rota',
     'send_emails': True,
     'geometry': {},
     'new_geometry': {},

@@ -4,7 +4,10 @@ from appdirs import user_config_dir
 
 from psiutils.known_paths import get_downloads_dir
 
-import directors_rota.text as text
+from directors_rota.text import Text
+
+txt = Text()
+
 
 # Config
 APP_NAME = 'phoenix_bbo_dir_rota'
@@ -13,7 +16,7 @@ EMAIL_TEMPLATE = Path('rota_email_template.txt')
 CONFIG_PATH = Path(user_config_dir(APP_NAME, APP_AUTHOR), 'config.toml')
 
 # App
-APP_TITLE = f'{text.DIRECTORS} Rota'
+APP_TITLE = f'{txt.DIRECTORS} Rota'
 ICON_FILE = Path( Path(__file__).parent, 'images', 'phoenix.png')
 AUTHOR = 'Jeff Watkins'
 
