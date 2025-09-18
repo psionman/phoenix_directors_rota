@@ -68,8 +68,8 @@ class EmailFrame():
     def _button_frame(self, master: tk.Frame) -> tk.Frame:
         frame = ButtonFrame(master, tk.HORIZONTAL)
         buttons = [
-            frame.icon_button('send', True, self._send_emails),
-            frame.icon_button('exit', False, self._dismiss),
+            frame.icon_button('send', self._send_emails, True),
+            frame.icon_button('exit', self._dismiss),
         ]
         frame.buttons = buttons
         return frame

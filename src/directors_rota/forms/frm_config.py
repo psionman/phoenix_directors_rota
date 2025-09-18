@@ -124,7 +124,7 @@ class ConfigFrame():
                           padx=PAD, pady=PAD)
 
         button = IconButton(
-            frame, psiText.OPEN, 'open', False, self._get_workbook_dir)
+            frame, psiText.OPEN, 'open', self._get_workbook_dir)
         button.grid(row=row, column=3, sticky=tk.W, padx=PAD)
 
         row += 1
@@ -138,7 +138,7 @@ class ConfigFrame():
                             padx=PAD, pady=PAD)
 
         button = IconButton(
-            frame, psiText.OPEN, 'open', False, self._get_email_template)
+            frame, psiText.OPEN, 'open', self._get_email_template)
         button.grid(row=row, column=3, sticky=tk.W, padx=PAD)
 
         # Main sheet name
@@ -234,8 +234,8 @@ class ConfigFrame():
     def _button_frame(self, master: tk.Frame) -> tk.Frame:
         frame = ButtonFrame(master, tk.HORIZONTAL)
         buttons = [
-            frame.icon_button('save', True, self._save_config),
-            frame.icon_button('exit', False, self._dismiss),
+            frame.icon_button('save', self._save_config, True),
+            frame.icon_button('exit', self._dismiss),
         ]
         frame.buttons = buttons
         frame.enable(False)
