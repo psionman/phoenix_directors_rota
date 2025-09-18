@@ -6,11 +6,12 @@ from pathlib import Path
 from psiutils.widgets import clickable_widget, separator_frame
 from psiutils.buttons import ButtonFrame, IconButton
 from psiutils.constants import PAD
-from psiutils.utilities import window_resize, geometry, logger
+from psiutils.utilities import window_resize, geometry
 from psiutils import text as psiText
 
 from directors_rota.constants import COL_MAXIMUM, APP_TITLE, TXT_FILE_TYPES
 from directors_rota.config import read_config
+from directors_rota import logger
 
 import directors_rota.text as txt
 

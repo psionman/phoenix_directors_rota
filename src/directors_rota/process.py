@@ -7,10 +7,10 @@ from typing import NamedTuple
 from dateutil.relativedelta import relativedelta
 
 from workbooky import Workbook, Worksheet
-from psiutils.utilities import logger
 
 from directors_rota.config import read_config
 import directors_rota.text as txt
+from directors_rota import logger
 
 status = {
     'OK': 0,

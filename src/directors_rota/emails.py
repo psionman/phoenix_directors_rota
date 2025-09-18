@@ -4,11 +4,11 @@ import smtplib
 from email.mime.text import MIMEText
 from smtplib import SMTPAuthenticationError
 
-from psiutils.utilities import logger
 from psiutils.errors import ErrorMsg
 
 from directors_rota.process import Director
 from directors_rota.config import read_config, env
+from directors_rota import logger
 
 
 def send_emails(text: str, directors: dict[Director]) -> int | ErrorMsg:

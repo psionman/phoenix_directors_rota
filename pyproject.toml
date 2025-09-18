@@ -28,7 +28,7 @@ dependencies = [
     "pillow>=11.2.1",
     "pluggy>=1.6.0",
     "psi-toml>=0.0.18",
-    "psiconfig>=0.0.15",
+    "psiutils>=0.2.10",
     "psiutils>=0.1.70",
     "pygments>=2.19.1",
     "pyperclip>=1.9.0",
@@ -42,6 +42,7 @@ dependencies = [
     "tomli>=2.2.1",
     "tomli-w>=1.2.0",
     "workbooky>=0.0.5",
+    "pygobject>=3.54.2",
 ]
 
 [dependency-groups]
