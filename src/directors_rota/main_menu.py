@@ -14,7 +14,7 @@ from directors_rota.text import Text
 
 from directors_rota.forms.frm_config import ConfigFrame
 
-txt = Text(1)
+txt = Text()
 
 SPACES = ' '*20
 

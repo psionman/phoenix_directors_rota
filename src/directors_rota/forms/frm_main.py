@@ -14,7 +14,7 @@ import psiutils.text as psiText
 
 from directors_rota.constants import MMYYYY, DOWNLOADS_DIR, XLS_FILE_TYPES
 from directors_rota.config import config
-# from directors_rota.process import generate_rota, status as process_status
+from directors_rota.process import generate_rota
 from directors_rota.text import Text
 
 from directors_rota.config import read_config
@@ -122,8 +122,11 @@ class MainFrame():
 
     def _button_frame(self, master: tk.Frame) -> tk.Frame:
         frame = ButtonFrame(master, tk.HORIZONTAL)
+        delete = IconButton(
+            frame, 'Delete workbook', 'delete', self._delete_workbook)
         frame.buttons = [
             frame.icon_button('build', self._generate_rota, True),
+            delete,
             frame.icon_button('close', self._dismiss)
         ]
         return frame
@@ -190,9 +193,10 @@ class MainFrame():
     def _set_file_message(self) -> None:
         # pylint: disable=no-member)
         message = ''
-        config_text = 'Click on Menu > Defaults to define.'
         email_template = os.path.isfile(config.email_template)
         directors_rota = os.path.isfile(self.workbook_path.get())
+
+        config_text = 'Click on Menu > Defaults to define.'
         if not email_template and not directors_rota:
             message = (f'{txt.DIRECTORS} rota and email template not valid. '
                        f'{config_text}')
@@ -202,6 +206,14 @@ class MainFrame():
             message = f'{txt.DIRECTORS} rota not valid.'
         if message:
             self.button_frame.enable(False)
+
+    def _delete_workbook(self, *args) -> None:
+        path = Path(self.config.workbook_dir, self.config.workbook_file_name)
+        if path.exists():
+            path.unlink()
+            print(f"Deleted {path}")
+        else:
+            print(f"File {path} does not exist")
 
     def _dismiss(self, *args) -> None:
         self.root.destroy()
