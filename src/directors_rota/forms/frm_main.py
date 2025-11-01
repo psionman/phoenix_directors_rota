@@ -10,7 +10,6 @@ from dateutil.parser import parse as date_parse
 from psiutils.buttons import ButtonFrame, IconButton
 from psiutils.constants import PAD, LARGE_FONT
 from psiutils.utilities import window_resize, geometry
-import psiutils.text as psiText
 
 from directors_rota.constants import MMYYYY, DOWNLOADS_DIR, XLS_FILE_TYPES
 from directors_rota.config import config
@@ -93,14 +92,14 @@ class MainFrame():
 
         row += 1
         button = IconButton(
-            frame, psiText.PREVIOUS, 'previous', self._previous_month)
+            frame, txt.PREVIOUS, 'previous', self._previous_month)
         button.grid(row=row, column=0, sticky=tk.E)
 
         month_entry = ttk.Entry(frame, textvariable=self.rota_month)
         month_entry.grid(row=row, column=1, sticky=tk.EW, padx=PAD, pady=PAD)
 
         button = IconButton(
-            frame, psiText.NEXT, 'next', self._next_month)
+            frame, txt.NEXT, 'next', self._next_month)
         button.grid(row=row, column=2, sticky=tk.W, padx=PAD)
 
         # Workbook
@@ -115,7 +114,7 @@ class MainFrame():
         self.workbook_path.trace_add("write", self._on_workbook_path_change)
 
         button = IconButton(
-            frame, psiText.OPEN, 'open', self._get_workbook_path)
+            frame, txt.OPEN, 'open', self._get_workbook_path)
         button.grid(row=row, column=2, padx=PAD)
 
         return frame

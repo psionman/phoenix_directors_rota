@@ -7,8 +7,9 @@ from dotenv import load_dotenv
 from psiconfig import TomlConfig
 from psiutils.known_paths import get_downloads_dir
 
+
 from directors_rota.constants import (
-    CONFIG_PATH, APP_NAME, APP_AUTHOR, EMAIL_TEMPLATE)
+    CONFIG_PATH, APP_NAME, APP_AUTHOR, EMAIL_TEMPLATE, DATA_DIR)
 from directors_rota.text import Text
 
 txt = Text()
@@ -35,6 +36,7 @@ DEFAULT_CONFIG = {
     'email_col': 2,
     'username_col': 3,
     'active_col': 4,
+    'send_reminder_col': 5,
     'mon_date_col': 0,
     'wed_date_col': 3,
     'senders_email_address': email_sender,
@@ -43,6 +45,7 @@ DEFAULT_CONFIG = {
     'email_password': email_key,
     'email_subject': f'Phoenix Bridge Club - BBO {txt.DIRECTORS} rota',
     'send_emails': True,
+    'email_reminder_dir': '/home/jeff/.local/share/cron_jobs/emails',
     'geometry': {},
     'new_geometry': {},
 }

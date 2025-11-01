@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from workbooky import Workbook, Worksheet
 
 from directors_rota.config import read_config
-import directors_rota.text as txt
+from directors_rota.text import Text
 from directors_rota import logger
 
 status = {
@@ -18,6 +18,8 @@ status = {
     'SHEET_MISSING': 2,
 }
 
+txt = Text()
+
 
 class DirectorData(NamedTuple):
     initials: str
@@ -25,6 +27,7 @@ class DirectorData(NamedTuple):
     email: str
     username: str
     active: bool
+    send_reminder: bool
 
 
 class Director():
@@ -44,6 +47,7 @@ class Director():
             self.email = data.email
             self.username = data.username
             self.active = data.active
+            self.send_reminder = data.send_reminder
 
     def __repr__(self) -> str:
         return f'{self.initials} {self.name}'
@@ -109,9 +113,11 @@ def get_directors(config, worksheet: object) -> dict[str, Director]:
                 row[config.email_col],
                 row[config.username_col],
                 row[config.active_col],
+                row[config.send_reminder_col],
             )
             director = Director(data)
             directors[director.initials] = director
+
     return directors
 
 

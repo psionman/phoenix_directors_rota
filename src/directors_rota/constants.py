@@ -1,6 +1,6 @@
 """Constants for the Director's Rota app."""
 from pathlib import Path
-from appdirs import user_config_dir
+from appdirs import user_config_dir, user_data_dir
 
 from psiutils.known_paths import get_downloads_dir
 
@@ -12,8 +12,10 @@ txt = Text()
 # Config
 APP_NAME = 'phoenix_bbo_dir_rota'
 APP_AUTHOR = 'phoenix'
+AUTHOR = 'Jeff Watkins'
 EMAIL_TEMPLATE = Path('rota_email_template.txt')
 CONFIG_PATH = Path(user_config_dir(APP_NAME, APP_AUTHOR), 'config.toml')
+DATA_DIR = str(Path(user_data_dir(APP_NAME, AUTHOR)))
 
 # App
 APP_TITLE = f'{txt.DIRECTORS} Rota'

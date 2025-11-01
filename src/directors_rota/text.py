@@ -13,7 +13,9 @@ from dataclasses import dataclass, field
 from psiutils.text import Text as PsiText
 
 strings = {
-    'DIRECTORS': 'Director\'s',
+    'DIRECTORS': "Director\'s",
+    'NO_DIRECTOR': 'No director allocated',
+    'NO_DATES': 'Missing date on Rota worksheet',
 }
 
 
@@ -42,3 +44,6 @@ class Text:
         # Optionally display contents of `text`
         if self.display:
             psi_text.display(strings)
+
+        # for item in sorted(list(self.__dict__)):
+        #     print(item)
