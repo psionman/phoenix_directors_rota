@@ -153,6 +153,7 @@ def _get_rota_dates(
     """Return a list of dates and directors names."""
     rota = []
     dir_col = date_col + 1
+    no_dates = True
     for row in worksheet.iter_rows(values_only=True):
         rota_date = row[date_col]
         if (
@@ -160,6 +161,7 @@ def _get_rota_dates(
             and isinstance(rota_date, datetime.date)
             and start_date <= rota_date < end_date
         ):
+            no_dates = False
             dir_inits = row[dir_col]
             if not dir_inits:
                 logger.warning(f'{txt.NO_DIRECTOR} for {rota_date:%d %b %Y}')
@@ -173,6 +175,10 @@ def _get_rota_dates(
             rota.append(f'{rota_date:%d/%m/%y}, {director.name}')
             logger.info(
                 f"Rota data added for {rota_date:%d %b %Y}, {director.name}")
+    if no_dates:
+        logger.warning(
+            (f"No dates in this period "
+                f"{start_date:%d/%m/%y} to {end_date:%d/%m/%y}"))
     return rota
 
 

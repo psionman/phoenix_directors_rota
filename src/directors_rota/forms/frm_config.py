@@ -7,13 +7,13 @@ from psiutils.widgets import clickable_widget, separator_frame
 from psiutils.buttons import ButtonFrame, IconButton
 from psiutils.constants import PAD
 from psiutils.utilities import window_resize, geometry
-from psiutils import text as psiText
 
 from directors_rota.constants import COL_MAXIMUM, APP_TITLE, TXT_FILE_TYPES
 from directors_rota.config import read_config
 from directors_rota import logger
+from directors_rota.text import Text
 
-import directors_rota.text as txt
+txt = Text()
 
 FRAME_TITLE = 'System defaults'
 
@@ -124,7 +124,7 @@ class ConfigFrame():
                           padx=PAD, pady=PAD)
 
         button = IconButton(
-            frame, psiText.OPEN, 'open', self._get_workbook_dir)
+            frame, txt.OPEN, 'open', self._get_workbook_dir)
         button.grid(row=row, column=3, sticky=tk.W, padx=PAD)
 
         row += 1
@@ -138,7 +138,7 @@ class ConfigFrame():
                             padx=PAD, pady=PAD)
 
         button = IconButton(
-            frame, psiText.OPEN, 'open', self._get_email_template)
+            frame, txt.OPEN, 'open', self._get_email_template)
         button.grid(row=row, column=3, sticky=tk.W, padx=PAD)
 
         # Main sheet name

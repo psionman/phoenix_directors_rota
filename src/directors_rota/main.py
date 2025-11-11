@@ -1,6 +1,6 @@
 """Create Output a director's rota for Phoenix Bridge Club."""
 
-from root import Root
+from directors_rota.root import Root
 
 from psiutils.icecream_init import ic_init
 ic_init()

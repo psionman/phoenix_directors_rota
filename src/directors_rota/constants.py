@@ -19,7 +19,7 @@ DATA_DIR = str(Path(user_data_dir(APP_NAME, AUTHOR)))
 
 # App
 APP_TITLE = f'{txt.DIRECTORS} Rota'
-ICON_FILE = Path( Path(__file__).parent, 'images', 'phoenix.png')
+ICON_FILE = Path('images', 'phoenix.png')
 AUTHOR = 'Jeff Watkins'
 
 # GUI
@@ -43,7 +43,3 @@ XLS_FILE_TYPES = (
 MMYYYY = '%b %Y'
 
 COL_MAXIMUM = 26
-
-# Colours
-ERROR_COLOUR = 'red'
-MSG_COLOUR = 'green'

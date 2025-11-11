@@ -4,6 +4,7 @@ import smtplib
 from email.mime.text import MIMEText
 from smtplib import SMTPAuthenticationError
 
+from psiutils.constants import Status
 from psiutils.errors import ErrorMsg
 
 from directors_rota.process import Director
@@ -15,6 +16,11 @@ def send_emails(text: str, directors: dict[Director]) -> int | ErrorMsg:
     """Send emails to the directors."""
     emails_sent = 0
     config = read_config()
+    if not (env['email_sender']
+            and env['email_key']
+            and env['smtp_port']
+            and env['smtp_server']):
+        return Status.WARNING
     for key, director in directors.items():
         if key and director.active:
             response = _create_email(config.email_subject, text, director)
@@ -24,7 +30,7 @@ def send_emails(text: str, directors: dict[Director]) -> int | ErrorMsg:
             emails_sent += 1
             if director.send_reminder:
                 _create_reminder(config.email_reminder_dir, director)
-    return emails_sent
+    return Status.SUCCESS
 
 
 def _create_email(subject: str, text: str, director: Director) -> str:
@@ -36,17 +42,11 @@ def _create_email(subject: str, text: str, director: Director) -> str:
             director.email)
     except SMTPAuthenticationError:
         logger.error('Email authentication error.')
-        return ErrorMsg(
-            header='Email error',
-            message='Email authentication error.',
-        )
+        return Status.ERROR
     except TypeError:
         logger.error('Email setup error.')
-        return ErrorMsg(
-            header='Email error',
-            message='Email setup error.',
-        )
-    return True
+        return Status.ERROR
+    return Status.SUCCESS
 
 
 def _send_email(subject: str, body: str, recipient: str) -> None:
@@ -61,7 +61,7 @@ def _send_email(subject: str, body: str, recipient: str) -> None:
 
 
 def _create_reminder(path: str, director: Director) -> None:
-    content = {
+    return {
         'date': '',
         'time': '06:00',
         'recipient': '',

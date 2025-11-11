@@ -1,5 +1,6 @@
 """Config for Phoenix director's rota."""
 import os
+import sys
 from pathlib import Path
 from appdirs import user_data_dir
 from dotenv import load_dotenv
@@ -7,14 +8,18 @@ from dotenv import load_dotenv
 from psiconfig import TomlConfig
 from psiutils.known_paths import get_downloads_dir
 
-
 from directors_rota.constants import (
-    CONFIG_PATH, APP_NAME, APP_AUTHOR, EMAIL_TEMPLATE, DATA_DIR)
+    CONFIG_PATH, APP_NAME, APP_AUTHOR, EMAIL_TEMPLATE)
 from directors_rota.text import Text
 
 txt = Text()
 
-load_dotenv()
+if getattr(sys, 'frozen', False):
+    exe_dir = Path(sys.executable).parent
+    env_path = exe_dir / '.env'
+    load_dotenv(dotenv_path=env_path)
+else:
+    load_dotenv()
 
 email_key = os.getenv('EMAIL_KEY')
 email_sender = os.getenv('EMAIL_SENDER')
@@ -39,10 +44,6 @@ DEFAULT_CONFIG = {
     'send_reminder_col': 5,
     'mon_date_col': 0,
     'wed_date_col': 3,
-    'senders_email_address': email_sender,
-    'smtp_server': smtp_server,
-    'SMTP_PORT': SMTP_PORT,
-    'email_password': email_key,
     'email_subject': f'Phoenix Bridge Club - BBO {txt.DIRECTORS} rota',
     'send_emails': True,
     'email_reminder_dir': '/home/jeff/.local/share/cron_jobs/emails',
@@ -63,8 +64,7 @@ def save_config(changed_config: TomlConfig) -> TomlConfig | None:
     result = changed_config.save()
     if result != changed_config.STATUS_OK:
         return None
-    toml_config = TomlConfig(CONFIG_PATH)
-    return toml_config
+    return TomlConfig(CONFIG_PATH)
 
 
 def _get_env() -> dict:

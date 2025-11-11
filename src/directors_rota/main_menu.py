@@ -9,7 +9,7 @@ from psiutils.menus import Menu, MenuItem
 from directors_rota.constants import (
     APP_TITLE, DOWNLOADS_DIR, EMAIL_TEMPLATE, TXT_FILE_TYPES, AUTHOR)
 from directors_rota._version import __version__
-import directors_rota.config as config
+from directors_rota.config import read_config
 from directors_rota.text import Text
 
 from directors_rota.forms.frm_config import ConfigFrame
@@ -18,6 +18,7 @@ txt = Text()
 
 SPACES = ' '*20
 
+config = read_config()
 
 class MainMenu():
     def __init__(self, parent, root):

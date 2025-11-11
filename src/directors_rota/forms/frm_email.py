@@ -5,7 +5,7 @@ import clipboard
 
 from psiutils.buttons import ButtonFrame
 from psiutils.widgets import WaitCursor
-from psiutils.constants import PAD
+from psiutils.constants import PAD, Status
 from psiutils.utilities import window_resize, geometry
 
 from directors_rota.config import read_config
@@ -77,16 +77,23 @@ class EmailFrame():
     def _send_emails(self) -> None:
         text = self.email_text.get('1.0', 'end')
         clipboard.copy(text)
-        if self.send_emails.get():
-            with WaitCursor(self.root):
-                response = send_emails(text, self.directors)
-            if isinstance(response, int):
-                messagebox.showinfo(
-                    'Emails', f'{response} emails sent.', parent=self.root)
-                self._dismiss()
-                return
+        if not self.send_emails.get():
+            return
+        with WaitCursor(self.root):
+            response = send_emails(text, self.directors)
+        if response == Status.WARNING:
+            messagebox.showwarning(
+                'Emails',
+                'Emails not sent.  Invalid email configuration.',
+                parent=self.root)
+            return
+        if response != Status.SUCCESS:
             messagebox.showerror(
                 'Emails', 'Emails not sent.', parent=self.root)
+            return
+        messagebox.showinfo(
+            'Emails', 'Emails sent.', parent=self.root)
+        self._dismiss()
 
     def _dismiss(self, event: object = None):
         self.root.destroy()

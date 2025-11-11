@@ -6,7 +6,7 @@ import sys
 import tkinter as tk
 
 from psiutils.widgets import get_styles
-from psiutils.utilities import display_icon
+from psiutils.utilities import display_icon, resource_path
 
 from directors_rota.constants import ICON_FILE
 
@@ -19,7 +19,8 @@ class Root():
     def __init__(self) -> None:
         self.root = tk.Tk()
         root = self.root
-        display_icon(root, ICON_FILE, ignore_error=True)
+        icon_path = resource_path(__file__, ICON_FILE)
+        display_icon(root, icon_path, ignore_error=True)
         # root.title(f'{APP_TITLE}')
         root.protocol("WM_DELETE_WINDOW", root.destroy)
 
