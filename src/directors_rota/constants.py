@@ -19,7 +19,7 @@ DATA_DIR = str(Path(user_data_dir(APP_NAME, AUTHOR)))
 
 # App
 APP_TITLE = f'{txt.DIRECTORS} Rota'
-ICON_FILE = Path('images', 'phoenix.png')
+ICON_FILE = Path('images', 'icon.png')
 AUTHOR = 'Jeff Watkins'
 
 # GUI

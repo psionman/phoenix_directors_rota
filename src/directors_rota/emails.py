@@ -24,7 +24,6 @@ def send_emails(text: str, directors: dict[Director]) -> int | ErrorMsg:
     for key, director in directors.items():
         if key and director.active:
             response = _create_email(config.email_subject, text, director)
-            logger.info(f"Email sent to {director.email}")
             if isinstance(response, ErrorMsg):
                 return response
             emails_sent += 1
@@ -58,6 +57,7 @@ def _send_email(subject: str, body: str, recipient: str) -> None:
     with smtplib.SMTP_SSL(env['smtp_server'], env['smtp_port']) as smtp_server:
         smtp_server.login(env['email_sender'], env['email_key'])
         smtp_server.sendmail(env['email_sender'], recipient, msg.as_string())
+    logger.info(f"Email sent to {recipient}")
 
 
 def _create_reminder(path: str, director: Director) -> None:
