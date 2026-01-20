@@ -43,6 +43,7 @@ dependencies = [
     "tomli-w>=1.2.0",
     "workbooky>=0.0.5",
     "pygobject>=3.54.2",
+    "flake8>=7.3.0",
 ]
 
 [dependency-groups]

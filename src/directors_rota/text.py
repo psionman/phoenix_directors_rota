@@ -16,6 +16,7 @@ strings = {
     'DIRECTORS': "Director\'s",
     'NO_DIRECTOR': 'No director allocated',
     'NO_DATES': 'Missing date on Rota worksheet',
+    'NO_TEMPLATE': 'Missing email template',
 }
 
 
