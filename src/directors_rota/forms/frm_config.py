@@ -27,6 +27,7 @@ FIELDS = {
     "active_col": tk.IntVar,
     "mon_date_col": tk.IntVar,
     "wed_date_col": tk.IntVar,
+    "thurs_date_col": tk.IntVar,
     "email_subject": tk.StringVar,
     "email_template": tk.StringVar,
     "send_emails": tk.BooleanVar,
@@ -44,6 +45,7 @@ class ConfigFrame:
     active_col: tk.IntVar
     mon_date_col: tk.IntVar
     wed_date_col: tk.IntVar
+    thurs_date_col: tk.IntVar
     email_subject: tk.StringVar
     email_template: tk.StringVar
     send_emails: tk.BooleanVar
@@ -191,6 +193,11 @@ class ConfigFrame:
         row += 1
         self._label_and_spinbox(
             frame, row, "Wednesday date column", self.wed_date_col
+        )
+
+        row += 1
+        self._label_and_spinbox(
+            frame, row, "Thursday date column", self.thurs_date_col
         )
 
         row += 1
