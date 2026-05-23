@@ -52,3 +52,11 @@ dev = ['pytest']
 [build-system]
 requires = ['uv-build']
 build-backend = 'uv_build'
+
+
+[tool.ruff]
+line-length = 79
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "B", "UP"]

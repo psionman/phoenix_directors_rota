@@ -1,54 +1,61 @@
 """Config for Phoenix director's rota."""
+
 import os
 import sys
 from pathlib import Path
+
 from appdirs import user_data_dir
 from dotenv import load_dotenv
-
 from psiconfig import TomlConfig
 from psiutils.known_paths import get_downloads_dir
 
 from directors_rota.constants import (
-    CONFIG_PATH, APP_NAME, APP_AUTHOR, EMAIL_TEMPLATE)
+    APP_AUTHOR,
+    APP_NAME,
+    CONFIG_PATH,
+    EMAIL_TEMPLATE,
+)
 from directors_rota.text import Text
 
 txt = Text()
 
-if getattr(sys, 'frozen', False):
+if getattr(sys, "frozen", False):
     exe_dir = Path(sys.executable).parent
-    env_path = exe_dir / '.env'
+    env_path = exe_dir / ".env"
     load_dotenv(dotenv_path=env_path)
 else:
     load_dotenv()
 
-email_key = os.getenv('EMAIL_KEY')
-email_sender = os.getenv('EMAIL_SENDER')
-smtp_server = os.getenv('SMTP_SERVER')
+email_key = os.getenv("EMAIL_KEY")
+email_sender = os.getenv("EMAIL_SENDER")
+smtp_server = os.getenv("SMTP_SERVER")
 try:
-    SMTP_PORT = int(os.getenv('SMTP_PORT'))
+    smpt_port = int(os.getenv("SMTP_PORT"))
 except TypeError:
-    SMTP_PORT = 0
+    smpt_port = 0
 
 DEFAULT_CONFIG = {
-    'workbook_dir': Path(get_downloads_dir()),
-    'workbook_file_name': 'directors-rota.xlsx',
-    'email_template': str(
-        Path(user_data_dir(APP_NAME, APP_AUTHOR), EMAIL_TEMPLATE)),
-    'main_sheet': 'Main',
-    'directors_sheet': 'Directors',
-    'initials_col': 0,
-    'name_col': 1,
-    'email_col': 2,
-    'username_col': 3,
-    'active_col': 4,
-    'send_reminder_col': 5,
-    'mon_date_col': 0,
-    'wed_date_col': 3,
-    'email_subject': f'Phoenix Bridge Club - BBO {txt.DIRECTORS} rota',
-    'send_emails': True,
-    'email_reminder_dir': '/home/jeff/.local/share/cron_jobs/emails',
-    'geometry': {},
-    'new_geometry': {},
+    "workbook_dir": Path(get_downloads_dir()),
+    "workbook_file_name": "directors-rota.xlsx",
+    "email_template": str(
+        Path(user_data_dir(APP_NAME, APP_AUTHOR), EMAIL_TEMPLATE)
+    ),
+    "main_sheet": "Main",
+    "directors_sheet": "Directors",
+    "initials_col": 0,
+    "name_col": 1,
+    "email_col": 2,
+    "username_col": 3,
+    "active_col": 4,
+    "send_reminder_col": 5,
+    "mon_date_col": 0,
+    "wed_date_col": 3,
+    "thurs_date_col": 6,
+    "email_subject": f"Phoenix Bridge Club - BBO {txt.DIRECTORS} rota",
+    "send_emails": True,
+    "email_reminder_dir": "/home/jeff/.local/share/cron_jobs/emails",
+    "geometry": {},
+    "new_geometry": {},
 }
 
 
@@ -70,15 +77,15 @@ def save_config(changed_config: TomlConfig) -> TomlConfig | None:
 def _get_env() -> dict:
     load_dotenv()
     try:
-        SMTP_PORT = int(os.getenv('SMTP_PORT'))
+        smpt_port = int(os.getenv("SMTP_PORT"))
     except TypeError:
-        SMTP_PORT = 0
+        smpt_port = 0
 
     return {
-        'email_key': os.getenv('EMAIL_KEY'),
-        'email_sender': os.getenv('EMAIL_SENDER'),
-        'smtp_server': os.getenv('SMTP_SERVER'),
-        'smtp_port': SMTP_PORT
+        "email_key": os.getenv("EMAIL_KEY"),
+        "email_sender": os.getenv("EMAIL_SENDER"),
+        "smtp_server": os.getenv("SMTP_SERVER"),
+        "smtp_port": smpt_port,
     }
 
 

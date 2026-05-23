@@ -1,45 +1,41 @@
-
-import os
-from pathlib import Path
-import tkinter as tk
-from tkinter import ttk, messagebox, filedialog
 import datetime
-from dateutil.relativedelta import relativedelta
+import os
+import tkinter as tk
+from pathlib import Path
+from tkinter import filedialog, messagebox, ttk
+
 from dateutil.parser import parse as date_parse
-
+from dateutil.relativedelta import relativedelta
 from psiutils.buttons import ButtonFrame, IconButton
-from psiutils.constants import PAD, LARGE_FONT
-from psiutils.utilities import window_resize, geometry
+from psiutils.constants import LARGE_FONT, PAD
+from psiutils.utilities import geometry, window_resize
 
-from directors_rota.constants import MMYYYY, DOWNLOADS_DIR, XLS_FILE_TYPES
-from directors_rota.config import config
-from directors_rota.process import generate_rota
-from directors_rota.text import Text
-
-from directors_rota.config import read_config
-
+from directors_rota.config import config, read_config
+from directors_rota.constants import DOWNLOADS_DIR, MMYYYY, XLS_FILE_TYPES
 from directors_rota.forms.frm_email import EmailFrame
 from directors_rota.main_menu import MainMenu
+from directors_rota.process import generate_rota
+from directors_rota.text import Text
 
 txt = Text()
 
 # pylint: disable=no-member)
-FRAME_TITLE = f'{txt.DIRECTORS} Rota'
+FRAME_TITLE = f"{txt.DIRECTORS} Rota"
 
 
-class MainFrame():
+class MainFrame:
     def __init__(self, root: tk.Tk) -> None:
         # pylint: disable=no-member)
         self.root = root
         self.directors = []
-        self.email = ''
+        self.email = ""
         self.config = read_config()
 
         # Tk Vars
         workbook_path = Path(config.workbook_dir, config.workbook_file_name)
         self.workbook_path = tk.StringVar(value=workbook_path)
         self.email_template = tk.StringVar(value=config.email_template)
-        self.rota_month = tk.StringVar(value='')
+        self.rota_month = tk.StringVar(value="")
 
         self._show()
 
@@ -54,10 +50,12 @@ class MainFrame():
 
         root.rowconfigure(0, weight=1)
         root.columnconfigure(0, weight=1)
-        root.bind('<Control-q>', self._dismiss)
-        root.bind('<Control-g>', self._generate_rota)
-        root.bind('<Configure>',
-                  lambda event, arg=None: window_resize(self, __file__))
+        root.bind("<Control-q>", self._dismiss)
+        root.bind("<Control-g>", self._generate_rota)
+        root.bind(
+            "<Configure>",
+            lambda event, arg=None: window_resize(self, __file__),
+        )
 
         main_menu = MainMenu(self, root)
         main_menu.create()
@@ -87,19 +85,19 @@ class MainFrame():
 
         # Widgets for month file.
         row = 0
-        label = ttk.Label(frame, text='Rota for month')
+        label = ttk.Label(frame, text="Rota for month")
         label.grid(row=row, column=1, sticky=tk.SW, padx=PAD)
 
         row += 1
         button = IconButton(
-            frame, txt.PREVIOUS, 'previous', self._previous_month)
+            frame, txt.PREVIOUS, "previous", self._previous_month
+        )
         button.grid(row=row, column=0, sticky=tk.E)
 
         month_entry = ttk.Entry(frame, textvariable=self.rota_month)
         month_entry.grid(row=row, column=1, sticky=tk.EW, padx=PAD, pady=PAD)
 
-        button = IconButton(
-            frame, txt.NEXT, 'next', self._next_month)
+        button = IconButton(frame, txt.NEXT, "next", self._next_month)
         button.grid(row=row, column=2, sticky=tk.W, padx=PAD)
 
         # Workbook
@@ -107,14 +105,13 @@ class MainFrame():
         label = ttk.Label(frame, text="Director's rota workbook")
         label.grid(row=row, column=0, sticky=tk.E)
 
-        workbook_file_name = ttk.Entry(frame,
-                                       textvariable=self.workbook_path)
-        workbook_file_name.grid(row=row, column=1, sticky=tk.EW,
-                                padx=PAD, pady=PAD)
+        workbook_file_name = ttk.Entry(frame, textvariable=self.workbook_path)
+        workbook_file_name.grid(
+            row=row, column=1, sticky=tk.EW, padx=PAD, pady=PAD
+        )
         self.workbook_path.trace_add("write", self._on_workbook_path_change)
 
-        button = IconButton(
-            frame, txt.OPEN, 'open', self._get_workbook_path)
+        button = IconButton(frame, txt.OPEN, "open", self._get_workbook_path)
         button.grid(row=row, column=2, padx=PAD)
 
         return frame
@@ -122,11 +119,12 @@ class MainFrame():
     def _button_frame(self, master: tk.Frame) -> tk.Frame:
         frame = ButtonFrame(master, tk.HORIZONTAL)
         delete = IconButton(
-            frame, 'Delete workbook', 'delete', self._delete_workbook)
+            frame, "Delete workbook", "delete", self._delete_workbook
+        )
         frame.buttons = [
-            frame.icon_button('build', self._generate_rota, True),
+            frame.icon_button("build", self._generate_rota, True),
             delete,
-            frame.icon_button('close', self._dismiss)
+            frame.icon_button("close", self._dismiss),
         ]
         return frame
 
@@ -134,21 +132,23 @@ class MainFrame():
         """Return a list of months."""
         now = datetime.datetime.now()
         start_date = datetime.datetime(now.year, now.month, 1)
-        months = [start_date +
-                  relativedelta(months=diff) for diff in range(-1, 4)]
-        self.rota_month.set((start_date +
-                             relativedelta(months=1)).strftime(MMYYYY))
+        months = [
+            start_date + relativedelta(months=diff) for diff in range(-1, 4)
+        ]
+        self.rota_month.set(
+            (start_date + relativedelta(months=1)).strftime(MMYYYY)
+        )
         return months
 
     def _previous_month(self) -> None:
         """Get previous month."""
-        selected_month = date_parse(f'1 {self.rota_month.get()}').date()
+        selected_month = date_parse(f"1 {self.rota_month.get()}").date()
         self.selected_month = selected_month - relativedelta(months=1)
         self.rota_month.set((self.selected_month).strftime(MMYYYY))
 
     def _next_month(self) -> None:
         """Get next month."""
-        selected_month = date_parse(f'1 {self.rota_month.get()}').date()
+        selected_month = date_parse(f"1 {self.rota_month.get()}").date()
         self.selected_month = selected_month + relativedelta(months=1)
         self.rota_month.set((self.selected_month).strftime(MMYYYY))
 
@@ -156,14 +156,15 @@ class MainFrame():
         """Show process screen."""
         if not Path(self.workbook_path.get()).is_file():
             messagebox.showerror(
-                '', f'{self.workbook_path.get()} does not exist',
+                "",
+                f"{self.workbook_path.get()} does not exist",
             )
             return
 
-        selected_month = date_parse(f'1 {self.rota_month.get()}').date()
+        selected_month = date_parse(f"1 {self.rota_month.get()}").date()
         response = generate_rota(selected_month)
         if not response:
-            messagebox.showerror('', 'Rota not created')
+            messagebox.showerror("", "Rota not created")
             return
         (self.email, self.directors) = response
         dlg = EmailFrame(self)
@@ -173,13 +174,13 @@ class MainFrame():
     def _get_workbook_path(self) -> None:
         """Set the workbook path"""
         initialdir = str(Path(self.workbook_path.get()).parent)
-        if initialdir == '.':
+        if initialdir == ".":
             initialdir = DOWNLOADS_DIR
         workbook_file_name = filedialog.askopenfilename(
-            title='Workbook',
+            title="Workbook",
             initialdir=initialdir,
             initialfile=str(Path(self.workbook_path.get()).name),
-            filetypes=XLS_FILE_TYPES
+            filetypes=XLS_FILE_TYPES,
         )
 
         if workbook_file_name:
@@ -191,18 +192,20 @@ class MainFrame():
 
     def _set_file_message(self) -> None:
         # pylint: disable=no-member)
-        message = ''
+        message = ""
         email_template = os.path.isfile(config.email_template)
         directors_rota = os.path.isfile(self.workbook_path.get())
 
-        config_text = 'Click on Menu > Defaults to define.'
+        config_text = "Click on Menu > Defaults to define."
         if not email_template and not directors_rota:
-            message = (f'{txt.DIRECTORS} rota and email template not valid. '
-                       f'{config_text}')
+            message = (
+                f"{txt.DIRECTORS} rota and email template not valid. "
+                f"{config_text}"
+            )
         elif not email_template and not directors_rota:
-            message = f'Email template not valid. {config_text}'
+            message = f"Email template not valid. {config_text}"
         elif not email_template and not directors_rota:
-            message = f'{txt.DIRECTORS} rota not valid.'
+            message = f"{txt.DIRECTORS} rota not valid."
         if message:
             self.button_frame.enable(False)
 
